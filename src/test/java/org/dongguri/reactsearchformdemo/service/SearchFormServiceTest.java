@@ -1,6 +1,7 @@
 package org.dongguri.reactsearchformdemo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,12 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.HashMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,19 +38,17 @@ public class SearchFormServiceTest {
     private SearchFormService  searchFormService;
 
     @Autowired
-    private ObjectMapper objectMapper; // 자바Spec에 맞게 등록된 Bean Serialize로  변환해준다.
+    private ObjectMapper objectMapper;
 
-    /*@Autowired
-    private ModelMapper modelMapper;
-*/
+
     @Test
-    public void test() throws Exception {
-        mockMvc.perform(post("/re-index"))
+    public void createIndex() throws Exception {
+        // Given && When
+        ResultActions resultActions = mockMvc.perform(post("/api/index"))
                 .andDo(print());
 
-
-
-
+        // Then
+        resultActions.andExpect(status().isOk());
     }
 
 }
