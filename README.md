@@ -10,7 +10,9 @@
 3. ...
 
 ### 할일
-1. Lol Api Data 긁어서 Maria에 집어넣기 scheduling으로 처리 예정 
+1. LoL Api Data 긁기
+2. Docker local Maraidb 집어넣기 
+ 
 
 ###  기술 스택
 1. React
