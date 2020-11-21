@@ -1,7 +1,9 @@
 package org.dongguri.reactsearchformdemo.controller;
 
+import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,24 +21,12 @@ public class TftApiController {
     @Autowired
     TftApiService tftApiService;
 
-    @GetMapping("/api/hello")
-    public String hello() {
-        return "Hello, the time at the server is now " + new Date() + "\n";
-    }
 
-    @GetMapping("/api/summoner/{name}")
+    @GetMapping(value = "/api/summoner/{name}", produces = "application/json")
     public ResponseEntity getSummonerByName(@PathVariable String name) throws Exception {
 
-        tftApiService.getSummonerByName(name);
+        SummonerDTO summonerDTO = tftApiService.getSummonerByName(name);
 
-        //boolean indexExists = elasticsearchOperations.indexOps(IndexCoordinates.of("grandmama-user")).create();
-
-/*
-        if (indexExists) {
-            return ResponseEntity.ok().body("Already Index Created");
-        }
-*/
-
-        return ResponseEntity.ok().body("Success Index Created");
+        return ResponseEntity.ok().body(summonerDTO);
     }
 }

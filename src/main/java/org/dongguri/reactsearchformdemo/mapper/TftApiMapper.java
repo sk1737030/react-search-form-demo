@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TftApiMapper {
 
-    public SummonerDTO getSummonerByName(String name) throws Exception;
+    SummonerDTO getSummonerByName(String name) throws Exception;
 }
