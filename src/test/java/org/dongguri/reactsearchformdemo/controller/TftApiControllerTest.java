@@ -1,11 +1,13 @@
 package org.dongguri.reactsearchformdemo.controller;
 
 import org.apache.http.HttpStatus;
+import org.dongguri.reactsearchformdemo.service.TftApiService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,12 +25,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class TftApiControllerTest {
     @Autowired
+    TftApiService tftApiService;
+
+    @Autowired
     MockMvc mockMvc;
 
+
     @Test
-    public void getSummonerByNameTest() throws Exception {
+    public void getSummonerByName_200() throws Exception {
         // Given
-        String userName = "mkttt1111";
+        String userName = "mkttt";
 
         // When
         mockMvc.perform(get("/api/summoner/{name}", userName))
@@ -42,9 +48,12 @@ public class TftApiControllerTest {
     }
 
     @Test
-    public void getSummonerByName_NotFound() throws Exception {
-        mockMvc.perform(get("/api/summoner/{name}", "mkttt11111"))
+    public void getSummonerByName_403() throws Exception {
+        mockMvc.perform(get("/api/summoner/{name}", "mkttt11111")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
+
 }

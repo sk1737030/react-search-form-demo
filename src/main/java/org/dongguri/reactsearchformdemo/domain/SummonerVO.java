@@ -16,7 +16,5 @@ public class SummonerVO {
     private DateTime revisionDate;
     private String name;
     private String summonerLevel;
-
-
 }
 

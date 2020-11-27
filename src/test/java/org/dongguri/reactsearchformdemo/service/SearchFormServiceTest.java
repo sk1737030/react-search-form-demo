@@ -35,6 +35,7 @@ public class SearchFormServiceTest {
     public void createIndex() throws Exception {
         // Given && When
         ResultActions resultActions = mockMvc.perform(post("/api/index"))
+
                 .andDo(print());
 
         // Then

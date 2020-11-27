@@ -35,27 +35,17 @@ import java.util.Collection;
 import java.util.Set;
 
 @Configuration
-@PropertySource("classpath:application-elasticsearch.properties")
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
-    @Value("${elasticsearch.ip}")
-    private String hostName;
-
-    @Value("${elasticsearch.port}")
-    private String port;
-
-    @Value("${elasticsearch.cluster.name}")
-    private String clusterName;
-
-    @Value("${elasticsearch.pool}")
-    private String poolSize;
+    @Autowired
+    AppProperties appProperties;
 
     @Override
     @Bean
     public RestHighLevelClient elasticsearchClient() {
 
         final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo(hostName)
+                .connectedTo(appProperties.getHostName())
                 .withHeaders(() -> {
                     HttpHeaders headers = new HttpHeaders();
                     headers.add("currentTime", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));

@@ -3,10 +3,7 @@ package org.dongguri.reactsearchformdemo.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.dongguri.reactsearchformdemo.config.error.ErrorCode;
-import org.springframework.validation.FieldError;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +28,6 @@ public class ErrorResponseDto {
         this.code = code.getCode();
         this.errors = errors;
     }
-
-
 
     @Getter
     @NoArgsConstructor
