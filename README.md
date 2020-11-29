@@ -11,7 +11,8 @@
 
 ### 할일
 1. LoL Api Data 긁기
-2. Docker local Maraidb 집어넣기 
+2. Maraidb에 데이터 저장하기
+3. 
  
 
 ###  기술 스택

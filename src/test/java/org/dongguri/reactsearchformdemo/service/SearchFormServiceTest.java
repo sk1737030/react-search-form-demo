@@ -1,7 +1,7 @@
 package org.dongguri.reactsearchformdemo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,10 +15,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-jdbc.properties")
+@TestPropertySource(locations = "classpath:application-private.properties")
 public class SearchFormServiceTest {
 
     @Autowired
@@ -35,7 +34,6 @@ public class SearchFormServiceTest {
     public void createIndex() throws Exception {
         // Given && When
         ResultActions resultActions = mockMvc.perform(post("/api/index"))
-
                 .andDo(print());
 
         // Then

@@ -1,6 +1,7 @@
 package org.dongguri.reactsearchformdemo.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.dongguri.reactsearchformdemo.domain.SummonerVO;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.springframework.stereotype.Repository;
 
@@ -8,5 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TftApiMapper {
 
-    SummonerDTO getSummonerByName(String name) throws Exception;
+    Integer saveSummoner(SummonerVO summonerVO) throws Exception;
+
+    SummonerVO getSummonerByName(String name) throws Exception;
 }

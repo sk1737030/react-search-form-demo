@@ -2,9 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.dongguri.reactsearchformdemo.mapper.TftApiMapper">
-    <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.dto.SummonerDTO">
-        select accountId ,profileIconId ,revisionDate , name ,id ,puuid ,summonerLevel
+    <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.domain.SummonerVO">
+        select id, accountId ,puuid, profileIconId ,revisionDate ,name ,summonerLevel
         from tbl_summoner
         where name = #{name}
      </select>
+
+    <insert id="saveSummoner">
+        insert into tbl_summoner (id, accountId ,puuid, profileIconId ,revisionDate , name ,summonerLevel)
+        values(#{id}, #{accountId} ,#{puuid}, #{profileIconId} ,#{revisionDate} , #{name} ,#{summonerLevel});
+    </insert>
 </mapper>
