@@ -7,16 +7,12 @@ import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,6 +79,17 @@ class TftApiControllerTest {
 
         // Then
         assertThat(summoner.getName()).isEqualTo(userName);
+    }
+
+    @Test
+    @DisplayName("puuid 기준으로 매칭리스트 가져오기")
+    void getMatchingListByPuuid_200() throws Exception {
+        // Given
+        String userName = "mkttt";
+
+        // When
+        SummonerDTO summonerByName = tftApiService.getSummonerByName("mkttt");
+        tftApiService.getSummonerMatchListByPuuid(summonerByName.getPuuid());
     }
 
 }
