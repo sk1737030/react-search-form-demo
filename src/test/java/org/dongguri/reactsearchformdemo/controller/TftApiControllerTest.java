@@ -81,15 +81,4 @@ class TftApiControllerTest {
         assertThat(summoner.getName()).isEqualTo(userName);
     }
 
-    @Test
-    @DisplayName("puuid 기준으로 매칭리스트 가져오기")
-    void getMatchingListByPuuid_200() throws Exception {
-        // Given
-        String userName = "mkttt";
-
-        // When
-        SummonerDTO summonerByName = tftApiService.getSummonerByName("mkttt");
-        tftApiService.getSummonerMatchListByPuuid(summonerByName.getPuuid());
-    }
-
 }

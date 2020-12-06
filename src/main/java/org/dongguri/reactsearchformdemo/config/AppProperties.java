@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("classpath:application-private.properties")
 @Getter
-@Setter
 public class AppProperties {
     @Value("${API_KEY}")
     private String apiKey;
@@ -25,4 +24,8 @@ public class AppProperties {
 
     @Value("${elasticsearch.pool}")
     private String poolSize;
+
+    @Value("${API_CALL_SIZE}")
+    private Integer callMatchListSize;
+
 }
