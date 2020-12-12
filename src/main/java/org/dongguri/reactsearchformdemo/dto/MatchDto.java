@@ -1,16 +1,15 @@
 package org.dongguri.reactsearchformdemo.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class MatchDto {
-    private final String data_version;
-    private final String match_id;
-    private final List<String> participants = new ArrayList<>();
+    private MetadataDto metadata;
+    private InfoDto info;
 }

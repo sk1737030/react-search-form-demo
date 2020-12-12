@@ -1,5 +1,6 @@
 package org.dongguri.reactsearchformdemo.controller;
 
+import org.dongguri.reactsearchformdemo.dto.MatchDto;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.dongguri.reactsearchformdemo.dto.SummonerMatchDTO;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,11 +33,12 @@ public class TftApiController {
     }
 
     @GetMapping(value = "/api/summoner/match/{puuid}", produces = "application/json")
-    public ResponseEntity SummonerMatchApiByPuuid(@PathVariable String puuid) throws Exception {
+    public ResponseEntity getMatchListApiByPuuid(@PathVariable String puuid) throws Exception {
+        List<String> matchList = tftApiService.getSummonerMatchListByPuuid(puuid);
+        List<MatchDto> matchDtos = new ArrayList<>();
+        matchList.forEach(matchId -> matchDtos.add(tftApiService.getDetailMatchByMatchId(matchId)));
 
-        SummonerMatchDTO summonerDTO = null;
-        List<String> strings = tftApiService.getSummonerMatchListByPuuid(puuid);
-
-        return ResponseEntity.ok().body(summonerDTO);
+        return ResponseEntity.ok().body(matchDtos);
     }
+
 }

@@ -62,7 +62,8 @@ class TftApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+        ;
     }
 
     @Test
@@ -79,6 +80,24 @@ class TftApiControllerTest {
 
         // Then
         assertThat(summoner.getName()).isEqualTo(userName);
+    }
+
+    @Test
+    @DisplayName("특정 유저의 puuid 기준으로 진행했던 Match정보들 가져오기")
+    void getMatchListApiByPuuid() throws Exception {
+        // Given
+        String userName = "mkttt";
+        String summonerDto = mockMvc.perform(get("/api/summoner/{name}", userName))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String puuid = objectMapper.readValue(summonerDto, SummonerDTO.class).getPuuid();
+
+        // When && Then
+        mockMvc.perform(get("/api/summoner/match/{puuid}", puuid))
+                //.andDo(print())
+                .andExpect(jsonPath("$[0].metadata.data_version").exists())
+        ;
     }
 
 }

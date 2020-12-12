@@ -1,6 +1,7 @@
 package org.dongguri.reactsearchformdemo.service;
 
 import org.dongguri.reactsearchformdemo.config.AppProperties;
+import org.dongguri.reactsearchformdemo.dto.MatchDto;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class TftApiServiceTest {
 
     @Test
     @DisplayName("puuid 기준으로 매칭리스트 가져오기")
-    void getMatchingListByPuuid() throws Exception {
+    void getMatchingListByPuuid_200() throws Exception {
         // Given
         final String testUserName = "mkttt";
 
@@ -38,5 +39,20 @@ class TftApiServiceTest {
         // Then
         // 20
         assertEquals(appProperties.getCallMatchListSize(), matchList.size());
+    }
+
+    @Test
+    @DisplayName("가져온 매치정보로 상세 게임정보 가져오기")
+    void getDetailMatch_200() throws Exception {
+        // Given
+        final String testUserName = "mkttt";
+        final SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
+        final List<String> matchList = tftApiService.getSummonerMatchListByPuuid(summonerByName.getPuuid());
+
+        // When
+        MatchDto detailMatchByMatchId = tftApiService.getDetailMatchByMatchId(matchList.get(0));
+
+        // Then
+        assertEquals(matchList.get(0), detailMatchByMatchId.getMetadata().getMatch_id());
     }
 }

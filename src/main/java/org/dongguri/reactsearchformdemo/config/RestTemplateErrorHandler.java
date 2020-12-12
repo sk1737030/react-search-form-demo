@@ -20,6 +20,8 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
         exceptionMap.put(HttpStatus.NOT_FOUND, new SummonerNotFoundException());
         exceptionMap.put(HttpStatus.UNAUTHORIZED, new ApiUnauthException());
         exceptionMap.put(HttpStatus.FORBIDDEN, new ApiForbiddenException());
+        exceptionMap.put(HttpStatus.INTERNAL_SERVER_ERROR, new ApiInternalServerError());
+
     }
 
     @Override
