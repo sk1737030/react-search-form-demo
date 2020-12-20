@@ -35,7 +35,7 @@ class TftApiServiceTest {
 
         // When
         final SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
-        final List<String> matchList = tftApiService.getSummonerMatchListByPuuid(summonerByName.getPuuid());
+        final List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
 
         // Then
         // 20
@@ -48,7 +48,7 @@ class TftApiServiceTest {
         // Given
         final String testUserName = "mkttt";
         final SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
-        final List<String> matchList = tftApiService.getSummonerMatchListByPuuid(summonerByName.getPuuid());
+        final List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
 
         // When
         MatchDto detailMatchByMatchId = tftApiService.callDetailMatchByMatchId(matchList.get(0));
@@ -62,9 +62,46 @@ class TftApiServiceTest {
     void callSummonerApiByName() throws Exception {
         // Given
         final String userName = "mkttt";
-        SummonerVO summonerVO = tftApiService.callSummonerApiByName(userName);
+
         // When && Then
+        SummonerVO summonerVO = tftApiService.callSummonerApiByName(userName);
         assertEquals(userName, summonerVO.getName());
     }
 
+    @Test
+    @DisplayName("puuid 기준으로 matchList가져오기")
+    void callSummonerMatchListByPuuid() throws Exception {
+        // Given
+        final String userName = "mkttt";
+        SummonerVO summonerVO = tftApiService.callSummonerApiByName(userName);
+        // When
+        List<String> matchList = tftApiService.callMatchListByPuuid(summonerVO.getPuuid());
+        // Then
+        assertEquals(appProperties.getCallMatchListSize(), matchList.size());
+    }
+
+    @Test
+    @DisplayName("처음으로 호출된 사용자 일경우 DB 저장")
+    void getFirstTimeSummoner() throws Exception {
+        // Given
+        final String userName = "mkttt";
+        tftApiService.getFirstTimeSummoner("mkttt");
+        // When
+
+        // Then
+    }
+
+    @Test
+    @DisplayName("상세 매칭리스트를 가져온다. 매칭아이디 기준으로")
+    void callDetailMatchByMatchId() throws Exception {
+        // Given
+        final String userName = "mkttt";
+        SummonerVO summonerVO = tftApiService.callSummonerApiByName(userName);
+        List<String> matchList = tftApiService.callMatchListByPuuid(summonerVO.getPuuid());
+        // When
+        MatchDto matchDto = tftApiService.callDetailMatchByMatchId(matchList.get(0));
+        // Then
+        assertEquals(matchList.get(0), matchDto.getInfo().getMatch_id());
+    }
 }
+
