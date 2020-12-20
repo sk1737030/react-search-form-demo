@@ -3,13 +3,20 @@
 
 <mapper namespace="org.dongguri.reactsearchformdemo.mapper.TftApiMapper">
     <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.domain.SummonerVO">
-        select id, accountId ,puuid, profileIconId ,revisionDate ,name ,summonerLevel
+        select id, accountId, puuid, profileIconId, revisionDate, name, summonerLevel
         from tbl_summoner
         where name = #{name}
-     </select>
+    </select>
 
     <insert id="saveSummoner">
-        insert into tbl_summoner (id, accountId ,puuid, profileIconId ,revisionDate , name ,summonerLevel)
-        values(#{id}, #{accountId} ,#{puuid}, #{profileIconId} ,#{revisionDate} , #{name} ,#{summonerLevel});
+        insert into tbl_summoner (id, accountId, puuid, profileIconId, revisionDate, name, summonerLevel)
+        values (#{id}, #{accountId}, #{puuid}, #{profileIconId}, #{revisionDate}, #{name}, #{summonerLevel});
+    </insert>
+
+    <insert id="saveMatchInfo">
+        insert into tbl_match_info(match_id, game_version, game_variation, tft_set_number, game_length, game_datetime,
+                                   queue_id)
+        values (#{match_id}, #{game_version}, #{game_variation}, #{tft_set_number}, #{game_length}, #{game_datetime},
+                #{queue_id})
     </insert>
 </mapper>

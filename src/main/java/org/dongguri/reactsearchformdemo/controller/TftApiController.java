@@ -2,7 +2,6 @@ package org.dongguri.reactsearchformdemo.controller;
 
 import org.dongguri.reactsearchformdemo.dto.MatchDto;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
-import org.dongguri.reactsearchformdemo.dto.SummonerMatchDTO;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -26,19 +25,17 @@ public class TftApiController {
 
     @GetMapping(value = "/api/summoner/{name}", produces = "application/json")
     public ResponseEntity getSummonerByName(@PathVariable String name) throws Exception {
-
         SummonerDTO summonerDTO = tftApiService.getSummonerByName(name);
 
         return ResponseEntity.ok().body(summonerDTO);
     }
 
-    @GetMapping(value = "/api/summoner/match/{puuid}", produces = "application/json")
-    public ResponseEntity getMatchListApiByPuuid(@PathVariable String puuid) throws Exception {
-        List<String> matchList = tftApiService.getSummonerMatchListByPuuid(puuid);
+    @GetMapping(value = "/api/summoner/{puuid}/reload", produces = "application/json")
+    public ResponseEntity reloadSummoner(@PathVariable String puuid) throws Exception {
         List<MatchDto> matchDtos = new ArrayList<>();
-        matchList.forEach(matchId -> matchDtos.add(tftApiService.getDetailMatchByMatchId(matchId)));
+        List<String> matchList = tftApiService.getSummonerMatchListByPuuid(puuid);
+        matchList.forEach(matchId -> matchDtos.add(tftApiService.callDetailMatchByMatchId(matchId)));
 
         return ResponseEntity.ok().body(matchDtos);
     }
-
 }

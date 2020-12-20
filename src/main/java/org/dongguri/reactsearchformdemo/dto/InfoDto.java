@@ -9,11 +9,12 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class InfoDto {
-    private DateTime game_datetime;
-    private float game_length;
-    private String game_variation;
+    private String match_id;
     private String game_version;
+    private String game_variation;
     private List<ParticipantDto> participants;
+    private float game_length;
     private int queue_id;
     private int tft_set_number;
+    private DateTime game_datetime;
 }
