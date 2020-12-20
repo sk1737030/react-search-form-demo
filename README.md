@@ -12,9 +12,10 @@
 ### 할일
 1. LoL Summoner Api Data 긁기 (Success)
 2. 처음 조회한 사용자면 DB에 데이터 저장 (Success)
-3. 조회한 사용자 MatchList 가져오기
-4. 가져온 MatchList 기준으로 Detail MatchList 부르기
+3. 조회한 사용자 MatchList 가져오기 (Success)
+4. 가져온 MatchList 기준으로 Detail MatchList 부르기 (Success)
 5. 처음 조회한 애들이면 DB에 저장
+6. 새로고침시에 정보 재저장 
 
 ### 사용할 기술 스택
 1. React
