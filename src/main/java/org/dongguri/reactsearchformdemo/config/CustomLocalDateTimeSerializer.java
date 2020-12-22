@@ -1,7 +1,6 @@
 package org.dongguri.reactsearchformdemo.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
@@ -20,11 +19,9 @@ public class CustomLocalDateTimeSerializer extends LocalDateTimeSerializer {
     @Override
     public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         try {
-            System.out.println("S_)DF)_SDFjs_)");
             String s = value.format(DATE_FORMAT);
             gen.writeString(s);
         } catch (DateTimeParseException e) {
-            System.err.println(e);
             gen.writeString("");
         }
     }

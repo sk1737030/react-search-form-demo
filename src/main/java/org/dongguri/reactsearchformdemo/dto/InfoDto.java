@@ -4,14 +4,18 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.dongguri.reactsearchformdemo.config.CustomLocalDateTimeDeserializer;
 import org.dongguri.reactsearchformdemo.config.CustomLocalDateTimeSerializer;
-import org.joda.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class InfoDto {
     private String match_id;
     private String game_version;
@@ -23,9 +27,5 @@ public class InfoDto {
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     private LocalDateTime game_datetime;
-
-    public void setMatch_id(String match_id) {
-        this.match_id = match_id;
-    }
 
 }
