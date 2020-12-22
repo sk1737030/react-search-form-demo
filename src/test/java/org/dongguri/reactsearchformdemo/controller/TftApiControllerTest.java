@@ -1,10 +1,10 @@
 package org.dongguri.reactsearchformdemo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dongguri.reactsearchformdemo.domain.SummonerVO;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
+import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -76,10 +76,10 @@ class TftApiControllerTest {
         mockMvc.perform(get("/api/summoner/{name}", userName))
                 .andDo(print());
 
-        SummonerVO summoner = tftApiMapper.getSummonerByName(userName);
+        SummonerDTO summoner = tftApiMapper.getSummonerByName(userName);
 
         // Then
-        assertThat(summoner.getName()).isEqualTo(userName);
+        assertEquals(summoner.getAccountId(), userName);
     }
 
     @Test

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dongguri.reactsearchformdemo.config.AppProperties;
 import org.dongguri.reactsearchformdemo.config.error.SummonerNotFoundException;
-import org.dongguri.reactsearchformdemo.domain.SummonerVO;
 import org.dongguri.reactsearchformdemo.dto.MatchDto;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
@@ -39,31 +38,38 @@ public class TftApiService {
 
     @Transactional
     public SummonerDTO getSummonerByName(String userName) throws Exception {
-        SummonerVO summonerVO = summonerMapper.getSummonerByName(userName);
+        SummonerDTO summonerDTO = summonerMapper.getSummonerByName(userName);
 
         // 최초 호출시
-        if (summonerVO == null) {
-            summonerVO = getFirstSummoner(userName);
+        if (summonerDTO == null) {
+
+            summonerDTO = saveSummonerInfo(userName);
+
+            List<String> matchList = callMatchListByPuuid(summonerDTO.getPuuid());
+
+            // TODO:: 개선사항 DB접근 비효율
+            matchList.forEach(match_id -> {
+                MatchDto matchDto = callDetailMatchByMatchId(match_id);
+                summonerMapper.saveMatchInfo(matchDto.getInfo());
+            });
         } else {
 
         }
 
-        return modelMapper.map(summonerVO, SummonerDTO.class);
+        return modelMapper.map(summonerDTO, SummonerDTO.class);
     }
 
-    public SummonerVO getFirstSummoner(String firstName) throws Exception {
-        SummonerVO summonerVO = callSummonerApiByName(firstName);
-        summonerMapper.saveSummoner(summonerVO);
-        List<String> matchList = callMatchListByPuuid(summonerVO.getPuuid());
-        matchList.forEach(match_id -> {
-            MatchDto matchDto = callDetailMatchByMatchId(match_id);
-            summonerMapper.saveMatchInfo(matchDto.getInfo());
-        });
-        return summonerVO;
+    // TODO:: Transaction isolate 생각해보기
+    public SummonerDTO saveSummonerInfo(String summonerName) throws Exception {
+        SummonerDTO summonerDTO = callSummonerApiByName(summonerName);
+        System.out.println(summonerDTO.getRevisionDate());
+        summonerMapper.saveSummoner(summonerDTO);
+
+        return summonerDTO;
     }
 
     // Riot Api 통신 Method
-    public SummonerVO callSummonerApiByName(String name) {
+    public SummonerDTO callSummonerApiByName(String name) {
         URI uri =
                 UriComponentsBuilder
                         .fromUriString(HTTPS_KR_API_RIOTGAMES_COM + LOL_SUMMONERS_BY_NAME_API + name)
@@ -71,18 +77,10 @@ public class TftApiService {
                         .build().toUri();
 
         // TODO:: 비동기처리도 따로 가능함. AsyncRestTemplate 사용해서
-        return restTemplate.getForObject(uri, SummonerVO.class);
+        return restTemplate.getForObject(uri, SummonerDTO.class);
     }
 
-    /**
-     * Summoner Match List
-     * reload없이 부를시
-     */
-    public List<String> getSummonerMatchListByPuuid(String puuid) throws Exception {
-        return summonerMapper.getSummonerMatchListByPuuid(puuid);
-    }
-
-    private List<String> callMatchListByPuuid(String puuid) {
+    public List<String> callMatchListByPuuid(String puuid) {
         URI uri =
                 UriComponentsBuilder
                         .fromUriString(HTTPS_ASIA_API_RIOTGAMES_COM + LOL_SUMMONER_MATCH_LIST_BY_PUUID)

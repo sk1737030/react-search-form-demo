@@ -1,8 +1,8 @@
 package org.dongguri.reactsearchformdemo.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.dongguri.reactsearchformdemo.domain.SummonerVO;
 import org.dongguri.reactsearchformdemo.dto.InfoDto;
+import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,11 +11,13 @@ import java.util.List;
 @Repository
 public interface TftApiMapper {
 
-    Integer saveSummoner(SummonerVO summonerVO) throws Exception;
+    Integer saveSummoner(SummonerDTO summonerVO);
 
-    SummonerVO getSummonerByName(String name) throws Exception;
+    SummonerDTO getSummonerByName(String summoner_name);
 
-    List<String> getSummonerMatchListByPuuid(String puuid) throws Exception;
+    Integer saveMatchInfo(InfoDto info);
 
-    Integer saveMatchInfo(InfoDto info) ;
+    InfoDto getMatchInfos(String match_id);
+
+
 }

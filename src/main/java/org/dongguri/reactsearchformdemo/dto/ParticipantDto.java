@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class ParticipantDto {
+    private Long match_participant_seq;
     private CompanionDto companion;
     private int gold_left;
     private int last_round;

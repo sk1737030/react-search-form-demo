@@ -33,7 +33,7 @@ public class TftApiController {
     @GetMapping(value = "/api/summoner/{puuid}/reload", produces = "application/json")
     public ResponseEntity reloadSummoner(@PathVariable String puuid) throws Exception {
         List<MatchDto> matchDtos = new ArrayList<>();
-        List<String> matchList = tftApiService.getSummonerMatchListByPuuid(puuid);
+        List<String> matchList = tftApiService.callMatchListByPuuid(puuid);
         matchList.forEach(matchId -> matchDtos.add(tftApiService.callDetailMatchByMatchId(matchId)));
 
         return ResponseEntity.ok().body(matchDtos);

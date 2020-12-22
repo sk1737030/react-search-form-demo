@@ -1,30 +1,37 @@
 package org.dongguri.reactsearchformdemo.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import org.apache.tomcat.jni.Local;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.dongguri.reactsearchformdemo.config.CustomLocalDateTimeDeserializer;
+import org.dongguri.reactsearchformdemo.config.CustomLocalDateTimeSerializer;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@TypeAlias("summoner")
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Setter
 public class SummonerDTO {
+
     private String id;
     private String accountId;
     private String puuid;
     private String profileIconId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date revisionDate;
-    private String name;
+    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    private LocalDateTime revisionDate;
+    @JsonProperty(value = "name")
+    private String summonerName;
     private String summonerLevel;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updDate;
+    private LocalDateTime updDate;
+
 }
