@@ -1,21 +1,19 @@
-package org.dongguri.reactsearchformdemo.config;
+package org.dongguri.reactsearchformdemo.common;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
-public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
-
-    public CustomLocalDateTimeDeserializer() {
-        super(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-    }
+@JsonComponent
+public class LocalDateTimeSerializer extends JsonDeserializer<LocalDateTime> {
 
     @Override
     public LocalDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
@@ -24,6 +22,7 @@ public class CustomLocalDateTimeDeserializer extends LocalDateTimeDeserializer {
             Instant instant = Instant.ofEpochMilli(value);
             return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         }
-        return super.deserialize(parser, context);
+        return deserialize(parser, context);
     }
+
 }

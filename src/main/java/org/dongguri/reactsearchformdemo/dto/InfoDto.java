@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.dongguri.reactsearchformdemo.config.CustomLocalDateTimeDeserializer;
-import org.dongguri.reactsearchformdemo.config.CustomLocalDateTimeSerializer;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,8 +22,6 @@ public class InfoDto {
     private float game_length;
     private int queue_id;
     private int tft_set_number;
-    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     private LocalDateTime game_datetime;
 
 }
