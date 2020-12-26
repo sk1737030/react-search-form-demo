@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class UnitDto {
+public class UnitDto extends CommonMatchParticipantDTO {
     private List<Integer> items;
     private String character_id;
     private String chosen;

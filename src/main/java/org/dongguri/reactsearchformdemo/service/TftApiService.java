@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dongguri.reactsearchformdemo.config.AppProperties;
 import org.dongguri.reactsearchformdemo.config.error.SummonerNotFoundException;
-import org.dongguri.reactsearchformdemo.dto.MatchDto;
-import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
+import org.dongguri.reactsearchformdemo.dto.*;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -50,19 +49,57 @@ public class TftApiService {
             // TODO:: 개선사항 DB접근 비효율
             matchList.forEach(match_id -> {
                 MatchDto matchDto = callDetailMatchByMatchId(match_id);
-                summonerMapper.saveMatchInfo(matchDto.getInfo());
+                saveMatchInfo(match_id, matchDto.getInfo());
             });
         } else {
-
         }
 
         return modelMapper.map(summonerDTO, SummonerDTO.class);
     }
 
+    private void saveMatchInfo(String match_id, InfoDto info) {
+        summonerMapper.saveMatchInfo(info);
+        // 매치 참가자 정보 저장
+        info.getParticipants().forEach(participantDto ->
+                saveMatchDetailParticipants(match_id, participantDto));
+    }
+
+    private void saveMatchDetailParticipants(String match_id, ParticipantDto participantDto) {
+        participantDto.setMatch_id(match_id);
+        summonerMapper.saveMatchDetailParticipant(participantDto);
+
+        Long match_participant_seq = participantDto.getMatch_participant_seq();
+
+        // 매치 참가자 스킨
+        saveMatchParticipantsCompanion(participantDto, match_participant_seq);
+
+        // 매치 참가자 시너지 정보
+        participantDto.getTraits().forEach(traitDto -> saveMatchParticipantsTrait(match_participant_seq, traitDto));
+        // 매치 참가자 유닛 정보
+        participantDto.getUnits().forEach(unitDto -> saveMatchParticipantsUnit(match_participant_seq, unitDto));
+    }
+
+    // 참가자 유닛
+    private void saveMatchParticipantsUnit(Long match_participant_seq, UnitDto unitDto) {
+        unitDto.setMatch_participant_seq(match_participant_seq);
+        summonerMapper.saveParticipantsUnit(unitDto);
+    }
+
+    // 참가자 시너지
+    private void saveMatchParticipantsTrait(Long match_participant_seq, TraitDto traitDto) {
+        traitDto.setMatch_participant_seq(match_participant_seq);
+        summonerMapper.saveParticipantsTrait(traitDto);
+    }
+
+    // 참가자 스킨
+    private void saveMatchParticipantsCompanion(ParticipantDto participantDto, Long match_participant_seq) {
+        participantDto.getCompanion().setMatch_participant_seq(match_participant_seq);
+        summonerMapper.saveParticipantCompanion(participantDto.getCompanion());
+    }
+
     // TODO:: Transaction isolate 생각해보기
     public SummonerDTO saveSummonerInfo(String summonerName) throws Exception {
         SummonerDTO summonerDTO = callSummonerApiByName(summonerName);
-        System.out.println(summonerDTO.getRevisionDate());
         summonerMapper.saveSummoner(summonerDTO);
 
         return summonerDTO;

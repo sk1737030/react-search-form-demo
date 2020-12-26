@@ -3,13 +3,29 @@
 
 <mapper namespace="org.dongguri.reactsearchformdemo.mapper.TftApiMapper">
 
+    <resultMap id="getMatchInfos" type="org.dongguri.reactsearchformdemo.dto.InfoDto">
+        <constructor>
+            <idArg column="match_id" javaType="String"/>
+            <arg column="game_version" javaType="String"/>
+            <arg column="game_variation" javaType="String"/>
+            <arg column="game_length" javaType="Float"/>
+            <arg column="queue_id" javaType="Integer"/>
+            <arg column="tft_set_number" javaType="Integer"/>
+            <arg column="game_datetime" javaType="Date"/>
+        </constructor>
+    </resultMap>
 
     <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.dto.SummonerDTO">
         <![CDATA[
-            select id, accountId, puuid, profileIconId, revisionDate, name AS "summonerName", summonerLevel
-            from tbl_summoner
-            where name = #{summonerName}
+        select id, accountId, puuid, profileIconId, revisionDate, name AS "summonerName", summonerLevel
+        from tbl_summoner
+        where name = #{summonerName}
         ]]>
+    </select>
+
+    <select id="getMatchInfos" resultType="org.dongguri.reactsearchformdemo.dto.InfoDto">
+        select match_id, game_variation, game_version, tft_set_number, game_length, game_datetime, queue_id
+        from tbl_match_info
     </select>
 
     <insert id="saveSummoner">
@@ -18,16 +34,32 @@
     </insert>
 
     <insert id="saveMatchInfo">
-        <![CDATA[
         insert into tbl_match_info(match_id, game_version, game_variation, tft_set_number, game_length, game_datetime,
                                    queue_id)
         values (#{match_id}, #{game_version}, #{game_variation}, #{tft_set_number}, #{game_length}, #{game_datetime},
                 #{queue_id})
-        ]]>
-
     </insert>
 
-    <select id="getMatchInfos" resultType="org.dongguri.reactsearchformdemo.dto.InfoDto">
+    <insert id="saveMatchDetailParticipant" useGeneratedKeys="true" keyProperty="match_participant_seq">
+        insert into tbl_match_detail_participant (match_id, puuid, gold_left, last_round,
+                                           level, placement, players_eliminated, time_eliminated,
+                                           total_damage_to_players)
+        values (#{match_id}, #{puuid}, #{gold_left}, #{last_round},
+                #{level}, #{placement}, #{players_eliminated}, #{time_eliminated}, #{total_damage_to_players})
+    </insert>
 
-    </select>
+    <insert id="saveParticipantCompanion">
+        insert into tbl_participant_companion (match_participant_seq, content_ID, skin_ID, species)
+        values (#{match_participant_seq}, #{content_ID}, #{skin_ID}, #{species})
+    </insert>
+
+    <insert id="saveParticipantsTrait">
+        insert into tbl_participant_trait (match_participant_seq, name, num_units, style, tier_current, tier_total)
+        values (#{match_participant_seq}, #{name}, #{num_units}, #{style}, #{tier_current}, #{tier_total})
+    </insert>
+
+    <insert id="saveParticipantsUnit">
+        insert into tbl_participant_unit(match_participant_seq, character_id, chosen, name, rarity, tier)
+        values (#{match_participant_seq}, #{character_id}, #{chosen}, #{name}, #{rarity}, #{tier})
+    </insert>
 </mapper>

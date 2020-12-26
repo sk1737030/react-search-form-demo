@@ -2,13 +2,15 @@ package org.dongguri.reactsearchformdemo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ParticipantDto {
-    private Long match_participant_seq;
+@NoArgsConstructor
+public class ParticipantDto extends CommonMatchParticipantDTO {
+    private String match_id;
     private CompanionDto companion;
     private int gold_left;
     private int last_round;
@@ -20,4 +22,8 @@ public class ParticipantDto {
     private int total_damage_to_players;
     private List<TraitDto> traits;
     private List<UnitDto> units;
+
+    public void setMatch_id(String match_id) {
+        this.match_id = match_id;
+    }
 }

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class TraitDto {
+public class TraitDto extends ParticipantDto {
     private String name;
     private int num_units;
     private int style;

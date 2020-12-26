@@ -20,7 +20,6 @@ import java.util.TimeZone;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
 class TftApiServiceTest {
@@ -35,7 +34,7 @@ class TftApiServiceTest {
 
 
     @Test
-    @DisplayName("처음 호출된 Summoner일 경우 DB 저장")
+    @DisplayName("처음 호출된 SummonerStdScalarSerializer일 경우 DB 저장")
     void saveSummonerAtFirst() throws Exception {
         // Given
         final String testUserName = "mkttt";
@@ -93,45 +92,5 @@ class TftApiServiceTest {
         assertEquals(matchList.get(0), detailMatchByMatchId.getMetadata().getMatch_id());
     }
 
-    @Test
-    @DisplayName("Api Summoner의 정보를 가져옴")
-    void callSummonerApiByName() throws Exception {
-        // Given
-        final String userName = "mkttt";
-
-        // When && Then
-        SummonerDTO summonerDTO = tftApiService.callSummonerApiByName(userName);
-        assertEquals(userName, summonerDTO.getSummonerName());
-    }
-
-    @Test
-    @DisplayName("puuid 기준으로 matchList가져오기")
-    void callSummonerMatchListByPuuid() throws Exception {
-        // Given
-        final String userName = "mkttt";
-        SummonerDTO summonerVO = tftApiService.callSummonerApiByName(userName);
-        // When
-        List<String> matchList = tftApiService.callMatchListByPuuid(summonerVO.getPuuid());
-        // Then
-        assertNotNull(matchList.get(0), "가져온 매칭리스트가 null이 아니여야한다.");
-        assertEquals(appProperties.getCallMatchListSize(), matchList.size());
-
-    }
-
-    @Test
-    @DisplayName("매칭아이디 기준으로 상세 매치 정보를 가져온다.")
-    void callDetailMatchByMatchId() throws Exception {
-        // Given
-        final String userName = "mkttt";
-        SummonerDTO summonerDTO = tftApiService.callSummonerApiByName(userName);
-        List<String> matchList = tftApiService.callMatchListByPuuid(summonerDTO.getPuuid());
-        // When
-        MatchDto matchDto = tftApiService.callDetailMatchByMatchId(matchList.get(0));
-
-        // Then
-        assertNotNull(matchDto.getMetadata().getMatch_id());
-        assertNotNull(matchDto.getInfo().getMatch_id());
-        assertEquals(matchList.get(0), matchDto.getInfo().getMatch_id());
-    }
 }
 
