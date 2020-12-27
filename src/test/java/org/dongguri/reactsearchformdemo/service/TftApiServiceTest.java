@@ -3,6 +3,7 @@ package org.dongguri.reactsearchformdemo.service;
 import org.dongguri.reactsearchformdemo.config.AppProperties;
 import org.dongguri.reactsearchformdemo.dto.InfoDto;
 import org.dongguri.reactsearchformdemo.dto.MatchDto;
+import org.dongguri.reactsearchformdemo.dto.ParticipantDto;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.junit.Before;
@@ -62,19 +63,28 @@ class TftApiServiceTest {
 
     //!!! 시작해야할부분
     @Test
-    @DisplayName("처음 요청된 사용자일 경우 매치상세 저장")
+    @DisplayName("사용자 매치 상세 정보 데이터 Mapping  테스트")
     void getSummonerByNameAtFirst() throws Exception {
         // Given
         final String testUserName = "mkttt";
         SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
-        List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
+        String testUserPuuid = summonerByName.getPuuid();
+        List<String> matchList = tftApiService.callMatchListByPuuid(testUserPuuid);
 
         // When
         String testMatch_id = matchList.get(0);
         InfoDto matchInfo = tftApiMapper.getMatchInfos(testMatch_id);
+        List<ParticipantDto> participants = matchInfo.getParticipants();
 
         // Then
         assertEquals(testMatch_id, matchInfo.getMatch_id(), "테스트할 매치ID와 저장한 MatchId는 같다");
+        assertNotNull(participants.get(0).getMatch_participant_seq());
+        assertNotNull(participants.get(0).getCompanion().getMatch_participant_seq());
+        assertTrue(participants.stream().anyMatch(participantDto -> participantDto.getPuuid().equals(testUserPuuid)),
+                "참가자들 중에 testUser의 Puuid와 같은 참가자가 있다.");
+        assertTrue(participants.get(0).getTraits().size() > 0, "사용자가 사용한 시너지 0 개 이상이다.");
+        assertTrue(participants.get(0).getUnits().size() > 0, "사용자가 사용한 유닛은 0 개 이상이다.");
+
     }
 
     @Test

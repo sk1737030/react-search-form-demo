@@ -2,13 +2,15 @@ package org.dongguri.reactsearchformdemo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class TraitDto extends ParticipantDto {
+@NoArgsConstructor
+public class TraitDto extends CommonMatchParticipantDTO {
     private String name;
-    private int num_units;
-    private int style;
-    private int tier_current;
-    private int tier_total;
+    private Integer num_units;
+    private Integer style;
+    private Integer tier_current;
+    private Integer tier_total;
 }

@@ -27,6 +27,7 @@ import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMa
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.http.HttpHeaders;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
@@ -53,8 +54,11 @@ public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
                 })
                 .build();
 
-        return RestClients.create(clientConfiguration).rest();
+        try (RestHighLevelClient restHighLevelClient = RestClients.create(clientConfiguration).rest()) {
+            return restHighLevelClient;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
-
-
 }

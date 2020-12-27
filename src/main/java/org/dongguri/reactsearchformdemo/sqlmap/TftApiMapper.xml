@@ -3,7 +3,7 @@
 
 <mapper namespace="org.dongguri.reactsearchformdemo.mapper.TftApiMapper">
 
-    <resultMap id="getMatchInfos" type="org.dongguri.reactsearchformdemo.dto.InfoDto">
+    <resultMap id="getMatchInfoMap" type="org.dongguri.reactsearchformdemo.dto.InfoDto">
         <constructor>
             <idArg column="match_id" javaType="String"/>
             <arg column="game_version" javaType="String"/>
@@ -11,9 +11,104 @@
             <arg column="game_length" javaType="Float"/>
             <arg column="queue_id" javaType="Integer"/>
             <arg column="tft_set_number" javaType="Integer"/>
-            <arg column="game_datetime" javaType="Date"/>
+            <arg column="game_datetime" javaType="java.time.LocalDateTime"/>
         </constructor>
+        <collection property="participants" ofType="org.dongguri.reactsearchformdemo.dto.ParticipantDto"
+            resultMap="getParticipantsMap" >
+        </collection>
     </resultMap>
+
+    <resultMap id="getParticipantsMap" type="org.dongguri.reactsearchformdemo.dto.ParticipantDto">
+        <id property="match_participant_seq" column="tmdp_match_participant_seq"/>
+        <result property="match_id" column="tmdp_match_id"/>
+        <result property="gold_left" column="tmdp_gold_left"/>
+        <result property="last_round" column="tmdp_last_round"/>
+        <result property="level" column="tmdp_level"/>
+        <result property="placement" column="tmdp_placement"/>
+        <result property="players_eliminated" column="tmdp_players_eliminated"/>
+        <result property="puuid" column="tmdp_puuid"/>
+        <result property="time_eliminated" column="tmdp_time_eliminated"/>
+        <result property="total_damage_to_players" column="tmdp_total_damage_to_players"/>
+
+        <association property="companion" column="companion" <!--javaType="org.dongguri.reactsearchformdemo.dto.CompanionDto"-->
+                     resultMap="getCompanionMap" columnPrefix="tpc_" />
+        <collection property="traits" ofType="org.dongguri.reactsearchformdemo.dto.TraitDto"
+                    resultMap="getTraitsMap" columnPrefix="tpt_"/>
+        <collection property="units" ofType="org.dongguri.reactsearchformdemo.dto.UnitDto"
+                    resultMap="getUnitsMap" columnPrefix="tpu_"/>
+    </resultMap>
+
+    <resultMap id="getTraitsMap" type="org.dongguri.reactsearchformdemo.dto.TraitDto">
+        <result property="match_participant_seq" column="match_participant_seq"/>
+        <result property="name" column="name"/>
+        <result property="num_units" column="num_units"/>
+        <result property="style" column="style"/>
+        <result property="tier_current" column="tier_current"/>
+        <result property="tier_total" column="tier_total"/>
+    </resultMap>
+
+    <resultMap id="getUnitsMap" type="org.dongguri.reactsearchformdemo.dto.UnitDto">
+        <result property="match_participant_seq" column="match_participant_seq"/>
+        <result property="character_id" column="character_id"/>
+        <result property="chosen" column="chosen"/>
+        <result property="name" column="name"/>
+        <result property="rarity" column="rarity"/>
+        <result property="tier" column="tier"/>
+    </resultMap>
+
+    <resultMap id="getCompanionMap" type="org.dongguri.reactsearchformdemo.dto.CompanionDto">
+        <result property="match_participant_seq" column="match_participant_seq"/>
+        <result property="content_ID" column="content_ID"/>
+        <result property="skin_ID" column="skin_ID"/>
+        <result property="species" column="species"/>
+    </resultMap>
+
+
+    <select id="getMatchInfos" resultMap="getMatchInfoMap">
+        select tmi.match_id,
+               tmi.game_variation,
+               tmi.game_version,
+               tmi.tft_set_number,
+               tmi.game_length,
+               tmi.game_datetime,
+               tmi.queue_id,
+               tmdp.match_participant_seq   as tmdp_match_participant_seq,
+               tmdp.match_id                as tmdp_match_id,
+               tmdp.puuid                   as tmdp_puuid,
+               gold_left                    as tmdp_gold_left,
+               tmdp.last_round              as tmdp_last_round,
+               tmdp.level                   as tmdp_level,
+               tmdp.placement               as tmdp_placement,
+               tmdp.players_eliminated      as tmdp_players_eliminated,
+               tmdp.time_eliminated         as tmdp_time_eliminated,
+               tmdp.total_damage_to_players as tmdp_total_damage_to_players,
+               tpt.match_participant_seq as tpt_match_participant_seq, tpt.name as tpt_name, tpt.num_units as tpt_num_units,
+               tpt.style as tpt_style, tpt.tier_current as tpt_tier_current, tpt.tier_total as tpt_tier_total,
+               tpu.match_participant_seq as tpu_match_participant_seq, tpu.character_id as tpu_character_id,
+               tpu.chosen as tpu_chosen, tpu.name as tpu_name, tpu.rarity as tpu_rarity, tpu.tier as tpu_tier,
+               tpc.match_participant_seq as tpc_match_participant_seq, tpc.content_ID as tpc_content_ID, tpc.skin_ID as tpc_skin_ID, tpc.species as tpc_species
+        from tbl_match_info tmi
+        inner join tbl_match_detail_participant tmdp on tmdp.match_id = tmi.match_id
+        inner join tbl_participant_trait tpt on tmdp.match_participant_seq = tpt.match_participant_seq
+        inner join tbl_participant_unit tpu on tmdp.match_participant_seq = tpu.match_participant_seq
+        inner join tbl_participant_companion tpc on tmdp.match_participant_seq = tpc.match_participant_seq
+        WHERE tmi.match_id = #{match_id}
+    </select>
+
+    <select id="getMatchDetailParticipant" resultType="org.dongguri.reactsearchformdemo.dto.ParticipantDto">
+        select match_participant_seq,
+               match_id,
+               puuid,
+               gold_left,
+               last_round,
+               level,
+               placement,
+               players_eliminated,
+               time_eliminated,
+               total_damage_to_players
+        from tbl_match_detail_participant
+        where match_id = #{match_id}
+    </select>
 
     <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.dto.SummonerDTO">
         <![CDATA[
@@ -23,10 +118,6 @@
         ]]>
     </select>
 
-    <select id="getMatchInfos" resultType="org.dongguri.reactsearchformdemo.dto.InfoDto">
-        select match_id, game_variation, game_version, tft_set_number, game_length, game_datetime, queue_id
-        from tbl_match_info
-    </select>
 
     <insert id="saveSummoner">
         insert into tbl_summoner (id, accountId, puuid, profileIconId, revisionDate, name, summonerLevel)
@@ -42,8 +133,8 @@
 
     <insert id="saveMatchDetailParticipant" useGeneratedKeys="true" keyProperty="match_participant_seq">
         insert into tbl_match_detail_participant (match_id, puuid, gold_left, last_round,
-                                           level, placement, players_eliminated, time_eliminated,
-                                           total_damage_to_players)
+                                                  level, placement, players_eliminated, time_eliminated,
+                                                  total_damage_to_players)
         values (#{match_id}, #{puuid}, #{gold_left}, #{last_round},
                 #{level}, #{placement}, #{players_eliminated}, #{time_eliminated}, #{total_damage_to_players})
     </insert>

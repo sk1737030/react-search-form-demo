@@ -12,16 +12,28 @@ import java.util.List;
 public class ParticipantDto extends CommonMatchParticipantDTO {
     private String match_id;
     private CompanionDto companion;
-    private int gold_left;
-    private int last_round;
-    private int level;
-    private int placement;
-    private int players_eliminated;
+    private Integer gold_left;
+    private Integer last_round;
+    private Integer level;
+    private Integer placement;
+    private Integer players_eliminated;
     private String puuid;
-    private float time_eliminated;
-    private int total_damage_to_players;
+    private Float time_eliminated;
+    private Integer total_damage_to_players;
     private List<TraitDto> traits;
     private List<UnitDto> units;
+
+    public ParticipantDto(String match_id, Integer gold_left, Integer last_round, Integer level, Integer placement, Integer players_eliminated, String puuid, Float time_eliminated, Integer total_damage_to_players) {
+        this.match_id = match_id;
+        this.gold_left = gold_left;
+        this.last_round = last_round;
+        this.level = level;
+        this.placement = placement;
+        this.players_eliminated = players_eliminated;
+        this.puuid = puuid;
+        this.time_eliminated = time_eliminated;
+        this.total_damage_to_players = total_damage_to_players;
+    }
 
     public void setMatch_id(String match_id) {
         this.match_id = match_id;

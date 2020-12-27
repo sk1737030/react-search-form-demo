@@ -72,7 +72,6 @@ public class TftApiService {
 
         // 매치 참가자 스킨
         saveMatchParticipantsCompanion(participantDto, match_participant_seq);
-
         // 매치 참가자 시너지 정보
         participantDto.getTraits().forEach(traitDto -> saveMatchParticipantsTrait(match_participant_seq, traitDto));
         // 매치 참가자 유닛 정보
