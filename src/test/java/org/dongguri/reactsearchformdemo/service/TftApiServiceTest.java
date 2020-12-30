@@ -1,10 +1,7 @@
 package org.dongguri.reactsearchformdemo.service;
 
 import org.dongguri.reactsearchformdemo.config.AppProperties;
-import org.dongguri.reactsearchformdemo.dto.InfoDto;
-import org.dongguri.reactsearchformdemo.dto.MatchDto;
-import org.dongguri.reactsearchformdemo.dto.ParticipantDto;
-import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
+import org.dongguri.reactsearchformdemo.dto.*;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class TftApiServiceTest {
     @Autowired
-    TftApiService tftApiService;
+    private TftApiService tftApiService;
 
     @Autowired
-    TftApiMapper tftApiMapper;
+    private TftApiMapper tftApiMapper;
 
     @Autowired
-    AppProperties appProperties;
+    private AppProperties appProperties;
+    public static final String TEST_USER_NAME = "mkttt";
 
 
     @Test
@@ -87,8 +85,7 @@ class TftApiServiceTest {
     @DisplayName("가져온 매치정보로 상세 게임정보 가져오기")
     void getDetailMatch_200() throws Exception {
         // Given
-        final String testUserName = "mkttt";
-        final SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
+        final SummonerDTO summonerByName = tftApiService.callSummonerApiByName(TEST_USER_NAME);
         final List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
 
         // When
@@ -96,6 +93,25 @@ class TftApiServiceTest {
 
         // Then
         assertEquals(matchList.get(0), detailMatchByMatchId.getMetadata().getMatch_id());
+    }
+
+    @Test
+    @DisplayName("매치Id에 참가자들 저장및 호출")
+    void saveAndGetMatchParticipants() throws Exception {
+        // Given
+        final SummonerDTO summonerByName = tftApiService.callSummonerApiByName(TEST_USER_NAME);
+        final List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
+        MatchDto detailMatchByMatchId = tftApiService.callDetailMatchByMatchId(matchList.get(0));
+
+
+        // When
+        tftApiService.saveMetaData(detailMatchByMatchId.getMetadata());
+        MetaDataDto metaDataDto = tftApiService.getMetaDataByMatchId(matchList.get(0));
+
+        // Then
+        assertNotNull(metaDataDto.getParticipants());
+        assertTrue(metaDataDto.getParticipants().contains(summonerByName.getPuuid()), "매치 참가들중에 TestUser의 puuid가 있다.");
+
     }
 }
 

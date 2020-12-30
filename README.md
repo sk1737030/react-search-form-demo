@@ -6,16 +6,18 @@
 
 ### 구현할 기능 목록
 1. 사용자 통합 검색
-2. 사용자 정보 확인
-3. ...
+2. 사용자 전적 확인
+3. 사용자 전적 상세
 
 ### 할일
 1. LoL Summoner Api Data 긁기 (Success)
 2. 처음 조회한 사용자면 DB에 데이터 저장 (Success)
 3. 조회한 사용자 MatchList 가져오기 (Success)
 4. 가져온 MatchList 기준으로 Detail MatchList 부르기 (Success)
-5. 처음 조회한 애들이면 DB에 저장
-6. 새로고침시에 정보 재저장 
+5. 처음 조회한 애들이면 DB에 저장 (Success)
+6. 기존에 저장된 사용자면 데이터 가져오기
+7. 전적 갱신시 데이터 최신화
+
 
 ### 사용할 기술 스택
 1. React

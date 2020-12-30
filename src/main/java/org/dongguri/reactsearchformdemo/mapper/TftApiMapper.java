@@ -2,7 +2,6 @@ package org.dongguri.reactsearchformdemo.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.dongguri.reactsearchformdemo.dto.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -24,4 +23,12 @@ public interface TftApiMapper {
     Integer saveParticipantsTrait(TraitDto traitDto);
 
     Integer saveParticipantsUnit(UnitDto unitDto);
+
+
+
+    Integer saveMetaData(MetaDataDto metadata);
+    Integer saveMatchParticipants(MetaDataDto participants);
+
+    MetaDataDto getMetaDataByMatchId(String match_id);
+
 }

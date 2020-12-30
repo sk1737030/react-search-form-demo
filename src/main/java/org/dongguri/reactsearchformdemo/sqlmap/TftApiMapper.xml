@@ -62,6 +62,14 @@
         <result property="species" column="species"/>
     </resultMap>
 
+    <resultMap id="metaDataByMatchIdMap" type="org.dongguri.reactsearchformdemo.dto.MetaDataDto">
+        <constructor>
+            <idArg column="match_id" javaType="String"/>
+            <idArg column="data_version" javaType="Integer"/>
+        </constructor>
+        <collection property="participants" column="match_id" select="getMatchParticipants" />
+    </resultMap>
+
 
     <select id="getMatchInfos" resultMap="getMatchInfoMap">
         select tmi.match_id,
@@ -163,4 +171,30 @@
         insert into tbl_participant_unit(match_participant_seq, character_id, chosen, name, rarity, tier)
         values (#{match_participant_seq}, #{character_id}, #{chosen}, #{name}, #{rarity}, #{tier})
     </insert>
+
+    <insert id="saveMetaData">
+        insert into tbl_metadata(match_id, data_version)
+        values (#{match_id}, #{data_version})
+    </insert>
+
+    <insert id="saveMatchParticipants">
+        insert into tbl_match_participant(match_id, participants)
+        values
+        <foreach collection="participants" item="participants" separator=",">
+            (#{match_id} , #{participants})
+        </foreach>
+    </insert>
+
+
+    <select id="getMetaDataByMatchId" resultMap="metaDataByMatchIdMap">
+        select match_id, data_version
+        from tbl_metadata
+        where match_id = #{match_id}
+    </select>
+
+    <select id="getMatchParticipants" resultType="String">
+        select participants
+        from tbl_match_participant
+        where match_id = #{match_id}
+    </select>
 </mapper>

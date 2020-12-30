@@ -1,6 +1,5 @@
 package org.dongguri.reactsearchformdemo.service;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dongguri.reactsearchformdemo.config.AppProperties;
 import org.dongguri.reactsearchformdemo.config.error.SummonerNotFoundException;
@@ -48,7 +47,6 @@ public class TftApiService {
 
         // 최초 호출시
         if (summonerDTO == null) {
-
             summonerDTO = saveSummonerInfo(userName);
 
             List<String> matchList = callMatchListByPuuid(summonerDTO.getPuuid());
@@ -56,22 +54,34 @@ public class TftApiService {
             // TODO:: 개선사항 DB접근 비효율
             matchList.forEach(match_id -> {
                 MatchDto matchDto = callDetailMatchByMatchId(match_id);
+                saveMetaData(matchDto.getMetadata());
                 saveMatchInfo(match_id, matchDto.getInfo());
             });
         } else {
+            final String puuid = summonerDTO.getPuuid();
+
+
         }
 
         return modelMapper.map(summonerDTO, SummonerDTO.class);
     }
 
-    private void saveMatchInfo(String match_id, InfoDto info) {
+    @Transactional
+    public void saveMetaData(MetaDataDto metadata) {
+        summonerMapper.saveMetaData(metadata);
+        summonerMapper.saveMatchParticipants(metadata);
+    }
+
+    @Transactional
+    public void saveMatchInfo(String match_id, InfoDto info) {
         summonerMapper.saveMatchInfo(info);
         // 매치 참가자 정보 저장
         info.getParticipants().forEach(participantDto ->
                 saveMatchDetailParticipants(match_id, participantDto));
     }
 
-    private void saveMatchDetailParticipants(String match_id, ParticipantDto participantDto) {
+    @Transactional
+    public void saveMatchDetailParticipants(String match_id, ParticipantDto participantDto) {
         participantDto.setMatch_id(match_id);
         summonerMapper.saveMatchDetailParticipant(participantDto);
 
@@ -86,24 +96,28 @@ public class TftApiService {
     }
 
     // 참가자 유닛
-    private void saveMatchParticipantsUnit(Long match_participant_seq, UnitDto unitDto) {
+    @Transactional
+    public void saveMatchParticipantsUnit(Long match_participant_seq, UnitDto unitDto) {
         unitDto.setMatch_participant_seq(match_participant_seq);
         summonerMapper.saveParticipantsUnit(unitDto);
     }
 
     // 참가자 시너지
-    private void saveMatchParticipantsTrait(Long match_participant_seq, TraitDto traitDto) {
+    @Transactional
+    public void saveMatchParticipantsTrait(Long match_participant_seq, TraitDto traitDto) {
         traitDto.setMatch_participant_seq(match_participant_seq);
         summonerMapper.saveParticipantsTrait(traitDto);
     }
 
     // 참가자 스킨
-    private void saveMatchParticipantsCompanion(ParticipantDto participantDto, Long match_participant_seq) {
+    @Transactional
+    public void saveMatchParticipantsCompanion(ParticipantDto participantDto, Long match_participant_seq) {
         participantDto.getCompanion().setMatch_participant_seq(match_participant_seq);
         summonerMapper.saveParticipantCompanion(participantDto.getCompanion());
     }
 
     // TODO:: Transaction isolate 생각해보기
+    @Transactional
     public SummonerDTO saveSummonerInfo(String summonerName) throws Exception {
         SummonerDTO summonerDTO = callSummonerApiByName(summonerName);
         summonerMapper.saveSummoner(summonerDTO);
@@ -144,5 +158,10 @@ public class TftApiService {
                         .buildAndExpand(matchId).toUri();
 
         return restTemplate.getForObject(uri, MatchDto.class);
+    }
+
+    @Transactional(readOnly = true)
+    public MetaDataDto getMetaDataByMatchId(String match_id) {
+        return summonerMapper.getMetaDataByMatchId(match_id);
     }
 }
