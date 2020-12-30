@@ -1,8 +1,8 @@
 package org.dongguri.reactsearchformdemo.service;
 
 import org.dongguri.reactsearchformdemo.config.AppProperties;
-import org.dongguri.reactsearchformdemo.dto.MatchDto;
-import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
+import org.dongguri.reactsearchformdemo.dto.match.MatchDto;
+import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,4 +65,6 @@ class TftCallApiTest {
         assertNotNull(matchDto.getInfo().getMatch_id());
         assertEquals(matchList.get(0), matchDto.getInfo().getMatch_id());
     }
+
+
 }

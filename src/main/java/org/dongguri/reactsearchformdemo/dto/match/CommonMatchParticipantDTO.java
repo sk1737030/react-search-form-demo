@@ -1,4 +1,4 @@
-package org.dongguri.reactsearchformdemo.dto;
+package org.dongguri.reactsearchformdemo.dto.match;
 
 public abstract class CommonMatchParticipantDTO {
     protected Long match_participant_seq;

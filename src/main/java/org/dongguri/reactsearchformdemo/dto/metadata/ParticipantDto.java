@@ -1,9 +1,12 @@
-package org.dongguri.reactsearchformdemo.dto;
+package org.dongguri.reactsearchformdemo.dto.metadata;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.dongguri.reactsearchformdemo.dto.match.CommonMatchParticipantDTO;
+import org.dongguri.reactsearchformdemo.dto.match.CompanionDto;
+import org.dongguri.reactsearchformdemo.dto.match.TraitDto;
+import org.dongguri.reactsearchformdemo.dto.match.UnitDto;
 
 import java.util.List;
 

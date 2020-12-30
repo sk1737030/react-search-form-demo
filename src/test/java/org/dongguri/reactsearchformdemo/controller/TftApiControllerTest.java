@@ -1,10 +1,9 @@
 package org.dongguri.reactsearchformdemo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
+import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
-import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

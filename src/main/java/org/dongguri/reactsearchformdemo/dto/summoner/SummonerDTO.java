@@ -1,4 +1,4 @@
-package org.dongguri.reactsearchformdemo.dto;
+package org.dongguri.reactsearchformdemo.dto.summoner;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

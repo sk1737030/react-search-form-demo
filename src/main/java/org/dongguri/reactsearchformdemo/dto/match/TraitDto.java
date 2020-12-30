@@ -1,9 +1,9 @@
-package org.dongguri.reactsearchformdemo.dto;
+package org.dongguri.reactsearchformdemo.dto.match;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.dongguri.reactsearchformdemo.dto.match.CommonMatchParticipantDTO;
 
 @Getter
 @NoArgsConstructor

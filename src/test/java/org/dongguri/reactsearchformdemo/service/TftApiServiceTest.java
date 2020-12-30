@@ -1,8 +1,13 @@
 package org.dongguri.reactsearchformdemo.service;
 
 import org.dongguri.reactsearchformdemo.config.AppProperties;
-import org.dongguri.reactsearchformdemo.dto.*;
+import org.dongguri.reactsearchformdemo.dto.match.InfoDto;
+import org.dongguri.reactsearchformdemo.dto.match.MatchDto;
+import org.dongguri.reactsearchformdemo.dto.metadata.MetaDataDto;
+import org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto;
+import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,23 +38,22 @@ class TftApiServiceTest {
     @DisplayName("처음 호출된 SummonerStdScalarSerializer일 경우 DB 저장")
     void saveSummonerAtFirst() throws Exception {
         // Given
-        final String testUserName = "mkttt";
+        tftApiService.saveSummonerInfo(TEST_USER_NAME);
+
         // When
-        tftApiService.saveSummonerInfo(testUserName);
-        SummonerDTO summonerByName = tftApiMapper.getSummonerByName(testUserName);
+        SummonerDTO summonerByName = tftApiMapper.getSummonerByName(TEST_USER_NAME);
 
         // Then
-        assertEquals(testUserName, summonerByName.getSummonerName());
+        assertEquals(TEST_USER_NAME, summonerByName.getSummonerName());
     }
 
     @Test
     @DisplayName("puuid 기준으로 매칭리스트 가져오기")
     void getMatchingListByPuuid_200() throws Exception {
         // Given
-        final String testUserName = "mkttt";
+        final SummonerDTO summonerByName = tftApiService.getSummonerByUserName(TEST_USER_NAME);
 
         // When
-        final SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
         final List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
 
         // Then
@@ -57,17 +61,17 @@ class TftApiServiceTest {
     }
 
     @Test
-    @DisplayName("사용자 매치 상세 정보 데이터 Mapping  테스트")
+    @DisplayName("사용자 매치와 매치 상세정보 데이터 DB 저장 테스트")
     void getSummonerByNameAtFirst() throws Exception {
         // Given
-        final String testUserName = "mkttt";
-        SummonerDTO summonerByName = tftApiService.getSummonerByName(testUserName);
+        SummonerDTO summonerByName = tftApiService.getSummonerByUserName(TEST_USER_NAME);
         String testUserPuuid = summonerByName.getPuuid();
+
         List<String> matchList = tftApiService.callMatchListByPuuid(testUserPuuid);
 
         // When
         String testMatch_id = matchList.get(0);
-        InfoDto matchInfo = tftApiMapper.getMatchInfos(testMatch_id);
+        InfoDto matchInfo = tftApiMapper.findMatchInfosByMatchId(testMatch_id);
         List<ParticipantDto> participants = matchInfo.getParticipants();
 
         // Then
@@ -103,14 +107,27 @@ class TftApiServiceTest {
         final List<String> matchList = tftApiService.callMatchListByPuuid(summonerByName.getPuuid());
         MatchDto detailMatchByMatchId = tftApiService.callDetailMatchByMatchId(matchList.get(0));
 
-
         // When
         tftApiService.saveMetaData(detailMatchByMatchId.getMetadata());
-        MetaDataDto metaDataDto = tftApiService.getMetaDataByMatchId(matchList.get(0));
+        MetaDataDto metaDataDto = tftApiService.getMetaDataWithParticipantsByMatchId(matchList.get(0));
 
         // Then
         assertNotNull(metaDataDto.getParticipants());
         assertTrue(metaDataDto.getParticipants().contains(summonerByName.getPuuid()), "매치 참가들중에 TestUser의 puuid가 있다.");
+
+    }
+
+    @Test
+    @DisplayName("puuid 기준으로 매칭상세 INFO를 가져온다 기본 10개")
+    void getMatchInfosByPuuid() throws Exception {
+        // Given
+        SummonerDTO summonerDTO = tftApiService.getSummonerByUserName(TEST_USER_NAME);
+        // When
+        List<InfoDto> matchInfosByPuuid = tftApiService.getMatchInfosByPuuid(summonerDTO.getPuuid());
+
+        // Then
+        assertNotNull(matchInfosByPuuid);
+        assertTrue(matchInfosByPuuid.size() > 0);
 
     }
 }

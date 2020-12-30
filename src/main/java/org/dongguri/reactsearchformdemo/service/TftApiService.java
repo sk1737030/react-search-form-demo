@@ -3,7 +3,13 @@ package org.dongguri.reactsearchformdemo.service;
 import lombok.extern.slf4j.Slf4j;
 import org.dongguri.reactsearchformdemo.config.AppProperties;
 import org.dongguri.reactsearchformdemo.config.error.SummonerNotFoundException;
-import org.dongguri.reactsearchformdemo.dto.*;
+import org.dongguri.reactsearchformdemo.dto.match.InfoDto;
+import org.dongguri.reactsearchformdemo.dto.match.MatchDto;
+import org.dongguri.reactsearchformdemo.dto.match.TraitDto;
+import org.dongguri.reactsearchformdemo.dto.match.UnitDto;
+import org.dongguri.reactsearchformdemo.dto.metadata.MetaDataDto;
+import org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto;
+import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -40,9 +47,23 @@ public class TftApiService {
         this.modelMapper = modelMapper;
     }
 
+    @Transactional(readOnly = true)
+    public MetaDataDto getMetaDataWithParticipantsByMatchId(String match_id) {
+        return summonerMapper.getMetaDataByMatchId(match_id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<InfoDto> getMatchInfosByPuuid(String puuid) {
+        List<InfoDto> matchInfos = new ArrayList<>();
+
+        List<String> matchList = summonerMapper.findMatchListByPuuid(puuid);
+        matchList.forEach(matchId -> matchInfos.add(summonerMapper.findMatchInfosByMatchId(matchId)));
+
+        return matchInfos;
+    }
 
     @Transactional
-    public SummonerDTO getSummonerByName(String userName) throws Exception {
+    public SummonerDTO getSummonerByUserName(String userName) throws Exception {
         SummonerDTO summonerDTO = summonerMapper.getSummonerByName(userName);
 
         // 최초 호출시
@@ -57,10 +78,6 @@ public class TftApiService {
                 saveMetaData(matchDto.getMetadata());
                 saveMatchInfo(match_id, matchDto.getInfo());
             });
-        } else {
-            final String puuid = summonerDTO.getPuuid();
-
-
         }
 
         return modelMapper.map(summonerDTO, SummonerDTO.class);
@@ -116,7 +133,6 @@ public class TftApiService {
         summonerMapper.saveParticipantCompanion(participantDto.getCompanion());
     }
 
-    // TODO:: Transaction isolate 생각해보기
     @Transactional
     public SummonerDTO saveSummonerInfo(String summonerName) throws Exception {
         SummonerDTO summonerDTO = callSummonerApiByName(summonerName);
@@ -160,8 +176,5 @@ public class TftApiService {
         return restTemplate.getForObject(uri, MatchDto.class);
     }
 
-    @Transactional(readOnly = true)
-    public MetaDataDto getMetaDataByMatchId(String match_id) {
-        return summonerMapper.getMetaDataByMatchId(match_id);
-    }
+
 }

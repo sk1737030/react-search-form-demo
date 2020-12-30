@@ -1,7 +1,7 @@
 package org.dongguri.reactsearchformdemo.controller;
 
-import org.dongguri.reactsearchformdemo.dto.MatchDto;
-import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
+import org.dongguri.reactsearchformdemo.dto.match.MatchDto;
+import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 import org.dongguri.reactsearchformdemo.service.TftApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -25,7 +25,7 @@ public class TftApiController {
 
     @GetMapping(value = "/api/summoner/{name}", produces = "application/json")
     public ResponseEntity getSummonerByName(@PathVariable String name) throws Exception {
-        SummonerDTO summonerDTO = tftApiService.getSummonerByName(name);
+        SummonerDTO summonerDTO = tftApiService.getSummonerByUserName(name);
 
         return ResponseEntity.ok().body(summonerDTO);
     }

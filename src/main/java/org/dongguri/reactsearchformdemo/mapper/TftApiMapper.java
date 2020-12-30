@@ -1,7 +1,13 @@
 package org.dongguri.reactsearchformdemo.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.dongguri.reactsearchformdemo.dto.*;
+import org.dongguri.reactsearchformdemo.dto.match.CompanionDto;
+import org.dongguri.reactsearchformdemo.dto.match.InfoDto;
+import org.dongguri.reactsearchformdemo.dto.match.TraitDto;
+import org.dongguri.reactsearchformdemo.dto.match.UnitDto;
+import org.dongguri.reactsearchformdemo.dto.metadata.MetaDataDto;
+import org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto;
+import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 
 import java.util.List;
 
@@ -14,7 +20,7 @@ public interface TftApiMapper {
 
     Integer saveMatchInfo(InfoDto info);
 
-    InfoDto getMatchInfos(String match_id);
+    InfoDto findMatchInfosByMatchId(String match_id);
 
     Integer saveMatchDetailParticipant(ParticipantDto participantDto);
 
@@ -24,11 +30,11 @@ public interface TftApiMapper {
 
     Integer saveParticipantsUnit(UnitDto unitDto);
 
-
-
     Integer saveMetaData(MetaDataDto metadata);
+
     Integer saveMatchParticipants(MetaDataDto participants);
 
     MetaDataDto getMetaDataByMatchId(String match_id);
 
+    List<String> findMatchListByPuuid(String puuid);
 }

@@ -3,7 +3,7 @@
 
 <mapper namespace="org.dongguri.reactsearchformdemo.mapper.TftApiMapper">
 
-    <resultMap id="getMatchInfoMap" type="org.dongguri.reactsearchformdemo.dto.InfoDto">
+    <resultMap id="getMatchInfoMap" type="org.dongguri.reactsearchformdemo.dto.match.InfoDto">
         <constructor>
             <idArg column="match_id" javaType="String"/>
             <arg column="game_version" javaType="String"/>
@@ -13,12 +13,12 @@
             <arg column="tft_set_number" javaType="Integer"/>
             <arg column="game_datetime" javaType="java.time.LocalDateTime"/>
         </constructor>
-        <collection property="participants" ofType="org.dongguri.reactsearchformdemo.dto.ParticipantDto"
+        <collection property="participants" ofType="org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto"
                     resultMap="getParticipantsMap">
         </collection>
     </resultMap>
 
-    <resultMap id="getParticipantsMap" type="org.dongguri.reactsearchformdemo.dto.ParticipantDto">
+    <resultMap id="getParticipantsMap" type="org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto">
         <id property="match_participant_seq" column="tmdp_match_participant_seq"/>
         <result property="match_id" column="tmdp_match_id"/>
         <result property="gold_left" column="tmdp_gold_left"/>
@@ -31,13 +31,13 @@
         <result property="total_damage_to_players" column="tmdp_total_damage_to_players"/>
 
         <association property="companion" column="companion" resultMap="getCompanionMap" columnPrefix="tpc_"/>
-        <collection property="traits" ofType="org.dongguri.reactsearchformdemo.dto.TraitDto"
+        <collection property="traits" ofType="org.dongguri.reactsearchformdemo.dto.match.TraitDto"
                     resultMap="getTraitsMap" columnPrefix="tpt_"/>
-        <collection property="units" ofType="org.dongguri.reactsearchformdemo.dto.UnitDto"
+        <collection property="units" ofType="org.dongguri.reactsearchformdemo.dto.match.UnitDto"
                     resultMap="getUnitsMap" columnPrefix="tpu_"/>
     </resultMap>
 
-    <resultMap id="getTraitsMap" type="org.dongguri.reactsearchformdemo.dto.TraitDto">
+    <resultMap id="getTraitsMap" type="org.dongguri.reactsearchformdemo.dto.match.TraitDto">
         <result property="match_participant_seq" column="match_participant_seq"/>
         <result property="name" column="name"/>
         <result property="num_units" column="num_units"/>
@@ -46,7 +46,7 @@
         <result property="tier_total" column="tier_total"/>
     </resultMap>
 
-    <resultMap id="getUnitsMap" type="org.dongguri.reactsearchformdemo.dto.UnitDto">
+    <resultMap id="getUnitsMap" type="org.dongguri.reactsearchformdemo.dto.match.UnitDto">
         <result property="match_participant_seq" column="match_participant_seq"/>
         <result property="character_id" column="character_id"/>
         <result property="chosen" column="chosen"/>
@@ -55,23 +55,23 @@
         <result property="tier" column="tier"/>
     </resultMap>
 
-    <resultMap id="getCompanionMap" type="org.dongguri.reactsearchformdemo.dto.CompanionDto">
+    <resultMap id="getCompanionMap" type="org.dongguri.reactsearchformdemo.dto.match.CompanionDto">
         <result property="match_participant_seq" column="match_participant_seq"/>
         <result property="content_ID" column="content_ID"/>
         <result property="skin_ID" column="skin_ID"/>
         <result property="species" column="species"/>
     </resultMap>
 
-    <resultMap id="metaDataByMatchIdMap" type="org.dongguri.reactsearchformdemo.dto.MetaDataDto">
+    <resultMap id="metaDataByMatchIdMap" type="org.dongguri.reactsearchformdemo.dto.metadata.MetaDataDto">
         <constructor>
             <idArg column="match_id" javaType="String"/>
             <idArg column="data_version" javaType="Integer"/>
         </constructor>
-        <collection property="participants" column="match_id" select="getMatchParticipants" />
+        <collection property="participants" column="match_id" select="getMatchParticipants"/>
     </resultMap>
 
 
-    <select id="getMatchInfos" resultMap="getMatchInfoMap">
+    <select id="findMatchInfosByMatchId" resultMap="getMatchInfoMap">
         select tmi.match_id,
                tmi.game_variation,
                tmi.game_version,
@@ -113,7 +113,7 @@
         WHERE tmi.match_id = #{match_id}
     </select>
 
-    <select id="getMatchDetailParticipant" resultType="org.dongguri.reactsearchformdemo.dto.ParticipantDto">
+    <select id="getMatchDetailParticipant" resultType="org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto">
         select match_participant_seq,
                match_id,
                puuid,
@@ -128,7 +128,7 @@
         where match_id = #{match_id}
     </select>
 
-    <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.dto.SummonerDTO">
+    <select id="getSummonerByName" resultType="org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO">
         <![CDATA[
         select id, accountId, puuid, profileIconId, revisionDate, name AS "summonerName", summonerLevel
         from tbl_summoner
@@ -196,5 +196,13 @@
         select participants
         from tbl_match_participant
         where match_id = #{match_id}
+    </select>
+
+    <select id="findMatchListByPuuid" resultType="String">
+        select match_id, participants
+        from tbl_match_participant
+        where participants = #{participants}
+        order by match_id, participants desc
+        LIMIT 0,10
     </select>
 </mapper>

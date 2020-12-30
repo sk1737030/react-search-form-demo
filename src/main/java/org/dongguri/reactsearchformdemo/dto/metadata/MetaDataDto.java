@@ -1,4 +1,4 @@
-package org.dongguri.reactsearchformdemo.dto;
+package org.dongguri.reactsearchformdemo.dto.metadata;
 
 import lombok.*;
 
