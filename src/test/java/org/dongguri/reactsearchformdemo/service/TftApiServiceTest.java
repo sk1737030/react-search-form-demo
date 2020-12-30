@@ -6,17 +6,14 @@ import org.dongguri.reactsearchformdemo.dto.MatchDto;
 import org.dongguri.reactsearchformdemo.dto.ParticipantDto;
 import org.dongguri.reactsearchformdemo.dto.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
-import org.junit.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,7 +58,6 @@ class TftApiServiceTest {
         assertEquals(appProperties.getCallMatchListSize(), matchList.size(), "기본 10개가 나와야한다");
     }
 
-    //!!! 시작해야할부분
     @Test
     @DisplayName("사용자 매치 상세 정보 데이터 Mapping  테스트")
     void getSummonerByNameAtFirst() throws Exception {
@@ -101,6 +97,5 @@ class TftApiServiceTest {
         // Then
         assertEquals(matchList.get(0), detailMatchByMatchId.getMetadata().getMatch_id());
     }
-
 }
 

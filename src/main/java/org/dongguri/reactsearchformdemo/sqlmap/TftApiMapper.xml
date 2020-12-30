@@ -14,7 +14,7 @@
             <arg column="game_datetime" javaType="java.time.LocalDateTime"/>
         </constructor>
         <collection property="participants" ofType="org.dongguri.reactsearchformdemo.dto.ParticipantDto"
-            resultMap="getParticipantsMap" >
+                    resultMap="getParticipantsMap">
         </collection>
     </resultMap>
 
@@ -30,8 +30,7 @@
         <result property="time_eliminated" column="tmdp_time_eliminated"/>
         <result property="total_damage_to_players" column="tmdp_total_damage_to_players"/>
 
-        <association property="companion" column="companion" <!--javaType="org.dongguri.reactsearchformdemo.dto.CompanionDto"-->
-                     resultMap="getCompanionMap" columnPrefix="tpc_" />
+        <association property="companion" column="companion" resultMap="getCompanionMap" columnPrefix="tpc_"/>
         <collection property="traits" ofType="org.dongguri.reactsearchformdemo.dto.TraitDto"
                     resultMap="getTraitsMap" columnPrefix="tpt_"/>
         <collection property="units" ofType="org.dongguri.reactsearchformdemo.dto.UnitDto"
@@ -82,16 +81,27 @@
                tmdp.players_eliminated      as tmdp_players_eliminated,
                tmdp.time_eliminated         as tmdp_time_eliminated,
                tmdp.total_damage_to_players as tmdp_total_damage_to_players,
-               tpt.match_participant_seq as tpt_match_participant_seq, tpt.name as tpt_name, tpt.num_units as tpt_num_units,
-               tpt.style as tpt_style, tpt.tier_current as tpt_tier_current, tpt.tier_total as tpt_tier_total,
-               tpu.match_participant_seq as tpu_match_participant_seq, tpu.character_id as tpu_character_id,
-               tpu.chosen as tpu_chosen, tpu.name as tpu_name, tpu.rarity as tpu_rarity, tpu.tier as tpu_tier,
-               tpc.match_participant_seq as tpc_match_participant_seq, tpc.content_ID as tpc_content_ID, tpc.skin_ID as tpc_skin_ID, tpc.species as tpc_species
+               tpt.match_participant_seq    as tpt_match_participant_seq,
+               tpt.name                     as tpt_name,
+               tpt.num_units                as tpt_num_units,
+               tpt.style                    as tpt_style,
+               tpt.tier_current             as tpt_tier_current,
+               tpt.tier_total               as tpt_tier_total,
+               tpu.match_participant_seq    as tpu_match_participant_seq,
+               tpu.character_id             as tpu_character_id,
+               tpu.chosen                   as tpu_chosen,
+               tpu.name                     as tpu_name,
+               tpu.rarity                   as tpu_rarity,
+               tpu.tier                     as tpu_tier,
+               tpc.match_participant_seq    as tpc_match_participant_seq,
+               tpc.content_ID               as tpc_content_ID,
+               tpc.skin_ID                  as tpc_skin_ID,
+               tpc.species                  as tpc_species
         from tbl_match_info tmi
-        inner join tbl_match_detail_participant tmdp on tmdp.match_id = tmi.match_id
-        inner join tbl_participant_trait tpt on tmdp.match_participant_seq = tpt.match_participant_seq
-        inner join tbl_participant_unit tpu on tmdp.match_participant_seq = tpu.match_participant_seq
-        inner join tbl_participant_companion tpc on tmdp.match_participant_seq = tpc.match_participant_seq
+                 inner join tbl_match_detail_participant tmdp on tmdp.match_id = tmi.match_id
+                 inner join tbl_participant_trait tpt on tmdp.match_participant_seq = tpt.match_participant_seq
+                 inner join tbl_participant_unit tpu on tmdp.match_participant_seq = tpu.match_participant_seq
+                 inner join tbl_participant_companion tpc on tmdp.match_participant_seq = tpc.match_participant_seq
         WHERE tmi.match_id = #{match_id}
     </select>
 

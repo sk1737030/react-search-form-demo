@@ -1,13 +1,13 @@
 package org.dongguri.reactsearchformdemo.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ParticipantDto extends CommonMatchParticipantDTO {
     private String match_id;
@@ -23,6 +23,7 @@ public class ParticipantDto extends CommonMatchParticipantDTO {
     private List<TraitDto> traits;
     private List<UnitDto> units;
 
+    @Builder
     public ParticipantDto(String match_id, Integer gold_left, Integer last_round, Integer level, Integer placement, Integer players_eliminated, String puuid, Float time_eliminated, Integer total_damage_to_players) {
         this.match_id = match_id;
         this.gold_left = gold_left;

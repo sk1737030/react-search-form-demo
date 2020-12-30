@@ -7,6 +7,7 @@ import org.dongguri.reactsearchformdemo.config.error.SummonerNotFoundException;
 import org.dongguri.reactsearchformdemo.dto.*;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -19,10 +20,7 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-@AllArgsConstructor
-
 public class TftApiService {
-
     private static final String API_KEY = "api_key";
     private static final String HTTPS_KR_API_RIOTGAMES_COM = "https://kr.api.riotgames.com";
     private static final String HTTPS_ASIA_API_RIOTGAMES_COM = "https://asia.api.riotgames.com";
@@ -34,6 +32,15 @@ public class TftApiService {
     private final RestTemplate restTemplate;
     private final TftApiMapper summonerMapper;
     private final ModelMapper modelMapper;
+
+    @Autowired
+    public TftApiService(AppProperties appProperties, RestTemplate restTemplate, TftApiMapper summonerMapper, ModelMapper modelMapper) {
+        this.appProperties = appProperties;
+        this.restTemplate = restTemplate;
+        this.summonerMapper = summonerMapper;
+        this.modelMapper = modelMapper;
+    }
+
 
     @Transactional
     public SummonerDTO getSummonerByName(String userName) throws Exception {

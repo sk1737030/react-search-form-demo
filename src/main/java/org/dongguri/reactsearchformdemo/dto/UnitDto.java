@@ -1,13 +1,13 @@
 package org.dongguri.reactsearchformdemo.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class UnitDto extends CommonMatchParticipantDTO {
     private List<Integer> items;
@@ -16,4 +16,14 @@ public class UnitDto extends CommonMatchParticipantDTO {
     private String name;
     private int rarity;
     private int tier;
+
+    @Builder
+    public UnitDto(List<Integer> items, String character_id, String chosen, String name, int rarity, int tier) {
+        this.items = items;
+        this.character_id = character_id;
+        this.chosen = chosen;
+        this.name = name;
+        this.rarity = rarity;
+        this.tier = tier;
+    }
 }

@@ -1,18 +1,13 @@
 package org.dongguri.reactsearchformdemo.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Setter
 public class SummonerDTO {
 
     private String id;
@@ -25,4 +20,15 @@ public class SummonerDTO {
     private String summonerLevel;
     private LocalDateTime updDate;
 
+    @Builder
+    public SummonerDTO(String id, String accountId, String puuid, String profileIconId, LocalDateTime revisionDate, String summonerName, String summonerLevel, LocalDateTime updDate) {
+        this.id = id;
+        this.accountId = accountId;
+        this.puuid = puuid;
+        this.profileIconId = profileIconId;
+        this.revisionDate = revisionDate;
+        this.summonerName = summonerName;
+        this.summonerLevel = summonerLevel;
+        this.updDate = updDate;
+    }
 }
