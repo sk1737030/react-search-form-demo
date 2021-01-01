@@ -20,7 +20,7 @@ public interface TftApiMapper {
 
     Integer saveMatchInfo(InfoDto info);
 
-    InfoDto findMatchInfosByMatchId(String match_id);
+    InfoDto getMatchInfosByMatchId(String match_id);
 
     Integer saveMatchDetailParticipant(ParticipantDto participantDto);
 
@@ -36,5 +36,7 @@ public interface TftApiMapper {
 
     MetaDataDto getMetaDataByMatchId(String match_id);
 
-    List<String> findMatchListByPuuid(String puuid);
+    List<String> getMatchListByPuuid(String puuid);
+
+    List<SummonerDTO> getMatchSummonerListByMatchId(MetaDataDto metaDataDto);
 }

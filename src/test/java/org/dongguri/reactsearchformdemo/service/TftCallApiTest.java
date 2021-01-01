@@ -47,7 +47,6 @@ class TftCallApiTest {
         // Then
         assertNotNull(matchList.get(0), "가져온 매칭리스트가 null이 아니여야한다.");
         assertEquals(appProperties.getCallMatchListSize(), matchList.size());
-
     }
 
     @Test
@@ -65,6 +64,5 @@ class TftCallApiTest {
         assertNotNull(matchDto.getInfo().getMatch_id());
         assertEquals(matchList.get(0), matchDto.getInfo().getMatch_id());
     }
-
 
 }

@@ -71,7 +71,7 @@
     </resultMap>
 
 
-    <select id="findMatchInfosByMatchId" resultMap="getMatchInfoMap">
+    <select id="getMatchInfosByMatchId" resultMap="getMatchInfoMap">
         select tmi.match_id,
                tmi.game_variation,
                tmi.game_version,
@@ -198,11 +198,22 @@
         where match_id = #{match_id}
     </select>
 
-    <select id="findMatchListByPuuid" resultType="String">
+    <select id="getMatchListByPuuid" resultType="String">
         select match_id, participants
         from tbl_match_participant
         where participants = #{participants}
-        order by match_id, participants desc
-        LIMIT 0,10
+        order by match_id, participants desc LIMIT 0,10
     </select>
+
+    <select id="getMatchSummonerListByMatchId" resultType="org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO">
+        select id, accountId, puuid, profileIconId, revisionDate, name, summonerLevel
+        from tbl_summoner ts
+        where ts.puuid in (
+        <foreach collection="participants" item="participants" separator=",">
+            #{participants}
+        </foreach>
+        )
+    </select>
+
+
 </mapper>

@@ -19,10 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -56,8 +53,8 @@ public class TftApiService {
     public List<InfoDto> getMatchInfosByPuuid(String puuid) {
         List<InfoDto> matchInfos = new ArrayList<>();
 
-        List<String> matchList = summonerMapper.findMatchListByPuuid(puuid);
-        matchList.forEach(matchId -> matchInfos.add(summonerMapper.findMatchInfosByMatchId(matchId)));
+        List<String> matchList = summonerMapper.getMatchListByPuuid(puuid);
+        matchList.forEach(matchId -> matchInfos.add(summonerMapper.getMatchInfosByMatchId(matchId)));
 
         return matchInfos;
     }
@@ -176,5 +173,23 @@ public class TftApiService {
         return restTemplate.getForObject(uri, MatchDto.class);
     }
 
+    public List<SummonerDTO> getMatchSummonerListByMatchId(String match_id) {
+        MetaDataDto metaDataByMatchId = summonerMapper.getMetaDataByMatchId(match_id);
+        List<SummonerDTO> summoners = summonerMapper.getMatchSummonerListByMatchId(metaDataByMatchId);
 
+        List<String> participants = metaDataByMatchId.getParticipants();
+        for (SummonerDTO summonerDTO : summoners) {
+            participants.remove(summonerDTO.getPuuid());
+        }
+
+        saveInParticipantsQueue(participants);
+
+        return summoners;
+    }
+
+
+    private void saveInParticipantsQueue(List<String> summonerListForQueueing) {
+        // queue에 넣어 놓기
+        Queue<String> queue = new PriorityQueue<>(summonerListForQueueing);
+    }
 }

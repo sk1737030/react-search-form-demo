@@ -8,7 +8,7 @@
 1. 사용자 통합 검색
 2. 사용자 전적 확인
 3. 사용자 전적 상세
-
+z
 ### 할일
 1. LoL Summoner Api Data 긁기 (Success)
 2. 처음 조회한 사용자면 DB에 데이터 저장 (Success)
@@ -16,12 +16,13 @@
 4. 가져온 MatchList 기준으로 Detail MatchList 부르기 (Success)
 5. 처음 조회한 애들이면 DB에 저장 (Success)
 6. 사용자 매치 정보 가져오기 (Success)
-7. 특정 매치에 있던 사용자들 가져오기
-8. 전적 갱신시 데이터 최신화 기능
+7. 사용자 기준 최근 매치 10개 가져오기 (Success)
+8. 매치별 같이 매치한 사용자들가져오기 
+9. 전적 갱신시 데이터 최신화 기능
 
 
 ### 사용할 기술 스택
-1. React
+1. Vue
 2. SpringBoot
 3. ElasticSearch
 4. Mariadb
@@ -34,9 +35,9 @@
 ### CI/CD
 Local -(Push)> Github -(Webhooks)> Jenkins -(jar,ssh)> Api Server(Spring Boot) Health Check
 
-### 목표
+### 진행하면서 목표
 1. Java Code Cenvention을 최대한 지키면서 참고 https://kkangeva.tistory.com/39
-2. Tdd는 못해도 UnitTest
+2. 중요로직 TestCase작성하기 
 
 ### 계기
 박재성님의 목적의식 있는 연습을 통한 효과적인 학습을 읽고...https://brunch.co.kr/@javajigi/8 

@@ -7,7 +7,6 @@ import org.dongguri.reactsearchformdemo.dto.metadata.MetaDataDto;
 import org.dongguri.reactsearchformdemo.dto.metadata.ParticipantDto;
 import org.dongguri.reactsearchformdemo.dto.summoner.SummonerDTO;
 import org.dongguri.reactsearchformdemo.mapper.TftApiMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,7 +71,7 @@ class TftApiServiceTest {
 
         // When
         String testMatch_id = matchList.get(0);
-        InfoDto matchInfo = tftApiMapper.findMatchInfosByMatchId(testMatch_id);
+        InfoDto matchInfo = tftApiMapper.getMatchInfosByMatchId(testMatch_id);
         List<ParticipantDto> participants = matchInfo.getParticipants();
 
         // Then
@@ -128,7 +128,26 @@ class TftApiServiceTest {
         // Then
         assertNotNull(matchInfosByPuuid);
         assertTrue(matchInfosByPuuid.size() > 0);
+    }
+
+
+    @Test
+    @DisplayName("매치별 같이 게임한 사용자들 가져오기")
+    void getMatchSummonerListByMatchId() throws Exception {
+        // Given
+        SummonerDTO summonerDTO = tftApiService.getSummonerByUserName(TEST_USER_NAME);
+        List<InfoDto> matchInfosByPuuid = tftApiService.getMatchInfosByPuuid(summonerDTO.getPuuid());
+        List<SummonerDTO> summonerList;
+
+        // When
+        summonerList = tftApiService.getMatchSummonerListByMatchId(matchInfosByPuuid.get(0).getMatch_id());
+
+
+        // Then
+        assertNotNull(summonerList);
+        assertTrue(summonerList.stream().anyMatch(summonerDTO1 -> summonerDTO1.getPuuid().equals(summonerDTO.getPuuid())));
 
     }
+
 }
 
