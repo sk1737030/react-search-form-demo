@@ -33,6 +33,7 @@ z
 7. Mybatis
 8. Spring Security
 9. LogBack
+10, RabbitMq
 
 ### CI/CD
 Local -(Push)> Github -(Webhooks)> Jenkins -(jar,ssh)> Api Server(Spring Boot) Health Check
