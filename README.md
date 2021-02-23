@@ -10,7 +10,7 @@
 1. 사용자 통합 검색
 2. 사용자 전적 확인
 3. 사용자 전적 상세
-z
+
 ### 할일
 1. LoL Summoner Api Data 긁기 (Success)
 2. 처음 조회한 사용자면 DB에 데이터 저장 (Success)
