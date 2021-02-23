@@ -47,7 +47,7 @@ Local -(Push)> Github -(Webhooks)> Jenkins -(jar,ssh)> Api Server(Spring Boot) H
 ### 계기
 박재성님의 목적의식 있는 연습을 통한 효과적인 학습을 읽고...https://brunch.co.kr/@javajigi/8 
 
-
+## 잠시 
 요즘들어 기초 (O/S,DB, 네트워크 등등)가 많이 모자라는게 느껴져서 잠시 멈췄습니다.  
 예를들어 근무 중에 일어난 일들 중 여러가지가 있지만
 1.리눅스는 왜 메모리를 거의 다 잡아놓고있나?
